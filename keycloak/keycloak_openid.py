@@ -168,7 +168,7 @@ class KeycloakOpenID:
                        "redirect-uri": redirect_uri}
         return URL_AUTH.format(**params_path)
 
-    def token(self, username="", password="", grant_type=["password"], code="", redirect_uri="", totp=None, **extra):
+    def token(self, username=None, password=None, grant_type=["password"], code="", redirect_uri="", totp=None, **extra):
         """
         The token endpoint is used to obtain tokens. Tokens can either be obtained by
         exchanging an authorization code or by supplying credentials directly depending on
@@ -186,9 +186,14 @@ class KeycloakOpenID:
         :return:
         """
         params_path = {"realm-name": self.realm_name}
-        payload = {"username": username, "password": password,
-                   "client_id": self.client_id, "grant_type": grant_type,
-                   "code": code, "redirect_uri": redirect_uri}
+        payload = {}
+        if username is not None:
+            payload = {"username": username, "password": password,
+                       "client_id": self.client_id, "grant_type": grant_type,
+                       "code": code, "redirect_uri": redirect_uri}
+        else:
+            payload = {"client_id": self.client_id, "grant_type": grant_type,
+                       "code": code, "redirect_uri": redirect_uri}
         if payload:
             payload.update(extra)
 

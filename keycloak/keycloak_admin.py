@@ -60,7 +60,7 @@ class KeycloakAdmin:
     _custom_headers = None
     _user_realm_name = None
 
-    def __init__(self, server_url, username, password, realm_name='master', client_id='admin-cli', verify=True,
+    def __init__(self, server_url, username=None, password=None, realm_name='master', client_id='admin-cli', verify=True,
                  client_secret_key=None, custom_headers=None, user_realm_name=None, auto_refresh_token=None):
         """
 
@@ -1179,8 +1179,9 @@ class KeycloakAdmin:
         grant_type = ["password"]
         if self.client_secret_key:
             grant_type = ["client_credentials"]
-            
-        self._token = self.keycloak_openid.token(self.username, self.password, grant_type=grant_type)
+            self._token = self.keycloak_openid.token(None, None, grant_type=grant_type)
+        else: 
+            self._token = self.keycloak_openid.token(self.username, self.password, grant_type=grant_type)
 
         headers = {
             'Authorization': 'Bearer ' + self.token.get('access_token'),
